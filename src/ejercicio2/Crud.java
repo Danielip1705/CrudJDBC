@@ -9,12 +9,26 @@ import java.util.Scanner;
 import javax.naming.CommunicationException;
 
 public class Crud {
-
+	
+	static Scanner sc = new Scanner(System.in);
+	static String nick = "";
+	static String pwd = "";
+	static String email = "";
+	static String nombre = "";
+	static LocalTime tiempoJugado;
+	static int hora = 0;
+	static int minutos = 0;
+	static int idPlayer = 0;
+	static int idGames = 0;
+	static int idCompra=0;
+	static String cosa = "";
+	static double precio = 0;
+	
 	public static void main(String[] args) {
 
 		int num = -1;
 		final String OPCION_INVALIDA="ESTA OPCION NO EXISTE";
-		Scanner sc = new Scanner(System.in);
+		
 
 		while (num != 0) {
 			menu();
@@ -36,13 +50,13 @@ public class Crud {
 				sc.nextLine();
 				switch (num) {
 				case 1:
-					insertarDatosPlayer(sc);
+					insertarDatosPlayer();
 					break;
 				case 2:
-					insertarDatoCompras(sc);
+					insertarDatoCompras();
 					break;
 				case 3:
-					insertarDatoJuego(sc);
+					insertarDatoJuego();
 					break;
 
 				}
@@ -58,36 +72,75 @@ public class Crud {
 					subMenuListadoJugador();
 					num = sc.nextInt();
 					sc.nextLine();
-					visualizacionTablaJugador(num, sc);
+					visualizacionTablaJugador(num);
 					break;
 				// Compras
 				case 2:
 					subMenuCompra();
 					num = sc.nextInt();
-					num = visualizarCompra(num, OPCION_INVALIDA, sc);
+					num = visualizarCompra(num, OPCION_INVALIDA);
 					break;
 				// Games
 				case 3:
 					subMenuListadogGame();
 					num = sc.nextInt();
 					sc.nextLine();
-					visualizacionTablaGames(num, sc);
+					visualizacionTablaGames(num);
 					break;
 				}
 
 				break;
-			//Modificar
+			//MODIFICAR 
 			case 5:
 				subMenuMostrarTablas();
 				num = sc.nextInt();
+				sc.nextLine();
 				switch(num) {
-				//jugador
+				//MODIFICAR JUGADOR
 				case 1:
-					System.out.println("¿QUIERES FILTRARLO?");
-					System.out.println("1. POR ID");
-					System.out.println("2. POR NOMBRE");
-					System.out.println("3. POR EMAIL");
+					subMenuFiltradoJugador();
 					num = sc.nextInt();
+					sc.nextLine();
+					switch(num) {
+					//CASO 1, MODIFICAR POR ID
+					case 1:
+						System.out.println("Inserte el id del jugador que quieras modificar");
+						idPlayer = sc.nextInt();
+						sc.nextLine();
+						System.out.println("Indica el nombre nuevo");
+						nick = sc.nextLine();
+						System.out.println("Indica la contraseña nueva");
+						pwd = sc.nextLine();
+						System.out.println("Indica el nombre del correo nuevo");
+						email = sc.nextLine();
+						Modificar.modificarJugadorPorId(idPlayer, "", "", nick, pwd, email);
+						break;
+					case 2:
+						String nombreBuscar="";
+						System.out.println("Inserte el nombre del jugador que quieras modificar");
+						nombreBuscar= sc.nextLine();
+						System.out.println("Indica el nombre nuevo");
+						nick = sc.nextLine();
+						System.out.println("Indica la contraseña nueva");
+						pwd = sc.nextLine();
+						System.out.println("Indica el nombre del correo nuevo");
+						email = sc.nextLine();
+						Modificar.modificarJugadorPorId(0, nombreBuscar, "", nick, pwd, email);
+						break;
+					case 3:
+						String emailBuscar="";
+						System.out.println("Inserte el nombre del correo del jugador que quieras modificar");
+						emailBuscar= sc.nextLine();
+						System.out.println("Indica el nombre nuevo");
+						nick = sc.nextLine();
+						System.out.println("Indica la contraseña nueva");
+						pwd = sc.nextLine();
+						System.out.println("Indica el nombre del correo nuevo");
+						email = sc.nextLine();
+						Modificar.modificarJugadorPorId(0, "", emailBuscar, nick, pwd, email);
+						break;
+					default:							
+					}
 					break;
 				//Compra
 				case 2:
@@ -106,7 +159,14 @@ public class Crud {
 
 	}
 
-	private static int visualizarCompra(int num, final String OPCION_INVALIDA, Scanner sc) {
+	private static void subMenuFiltradoJugador() {
+		System.out.println("¿QUIERES FILTRARLO?");
+		System.out.println("1. POR ID");
+		System.out.println("2. POR NOMBRE");
+		System.out.println("3. POR EMAIL");
+	}
+
+	private static int visualizarCompra(int num, final String OPCION_INVALIDA) {
 		switch(num) {
 		//Todos
 		case 1:
@@ -120,16 +180,16 @@ public class Crud {
 			while (superoId) {
 
 				System.out.println("INDICA LA ID");
-				id = sc.nextInt();
+				idCompra = sc.nextInt();
 				contador = Listado.contarId("Compras");
-				if (id > contador) {
+				if (idCompra > contador) {
 					System.out.println("NO EXISTE COMPRA CON ESE ID");
 				} else {
 					superoId = false;
 				}
 			}
 			sc.nextLine();
-			Listado.listadoCompraPorId(id, "IdCompra");
+			Listado.listadoCompraPorId(idCompra, "IdCompra");
 			break;
 		//Id jugador
 		case 3:
@@ -183,7 +243,7 @@ public class Crud {
 			System.out.println("2. POR AÑO Y MES");
 			num=sc.nextInt();
 			sc.nextLine();
-			visuzalizarFecha(num, OPCION_INVALIDA, sc);
+			visuzalizarFecha(num, OPCION_INVALIDA);
 			break;
 		default:
 			System.out.println(OPCION_INVALIDA);
@@ -213,7 +273,7 @@ public class Crud {
 		}
 	}
 
-	private static void visuzalizarFecha(int num, final String OPCION_INVALIDA, Scanner sc) {
+	private static void visuzalizarFecha(int num, final String OPCION_INVALIDA) {
 		switch(num) {
 		case 1:
 			int año = 0;
@@ -246,7 +306,7 @@ public class Crud {
 		System.out.println("6. POR FECHA");
 	}
 
-	private static void visualizacionTablaGames(int num, Scanner sc) {
+	private static void visualizacionTablaGames(int num) {
 		switch (num) {
 		case 1:
 			Listado.mostrarListadoGames();
@@ -278,7 +338,7 @@ public class Crud {
 		}
 	}
 
-	private static void visualizacionTablaJugador(int num, Scanner sc) {
+	private static void visualizacionTablaJugador(int num) {
 		switch (num) {
 		case 1:
 			Listado.listadoPlayer();
@@ -339,11 +399,8 @@ public class Crud {
 		System.out.println("================");
 	}
 
-	private static void insertarDatoCompras(Scanner sc) {
-		int idPlayer = 0;
-		int idGames = 0;
-		String cosa = "";
-		double precio = 0;
+	private static void insertarDatoCompras() {
+
 		LocalDate fechaCompra;
 		System.out.println("Inserte el id del jugador que haya comprado algo");
 		idPlayer = sc.nextInt();
@@ -380,11 +437,7 @@ public class Crud {
 		}
 	}
 
-	private static void insertarDatoJuego(Scanner sc) {
-		String nombre = "";
-		LocalTime tiempoJugado;
-		int hora = 0;
-		int minutos = 0;
+	private static void insertarDatoJuego() {
 		System.out.println("Nombre del juego al que has jugado");
 		nombre = sc.nextLine();
 		System.out.println("Indica las horas que has jugado");
@@ -402,10 +455,7 @@ public class Crud {
 		}
 	}
 
-	private static void insertarDatosPlayer(Scanner sc) {
-		String nick = "";
-		String pwd = "";
-		String email = "";
+	private static void insertarDatosPlayer() {
 		System.out.println("Indica el nombre del jugador");
 		nick = sc.nextLine();
 		System.out.println("Indica la contraseña");
