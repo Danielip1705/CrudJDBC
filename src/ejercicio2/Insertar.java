@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -52,7 +53,7 @@ public class Insertar {
 		}
 	}
 	
-	public static void insertarDatosTablaGames(String nick,LocalTime tiempoJugado) throws CommunicationException {
+	public static void insertarDatosTablaGames(String nick,Time tiempoJugado) throws CommunicationException {
 		Connection con = null;
 		Statement stmt = null;
 		String comando = "";

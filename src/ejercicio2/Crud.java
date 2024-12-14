@@ -11,18 +11,23 @@ import javax.naming.CommunicationException;
 public class Crud {
 	
 	static Scanner sc = new Scanner(System.in);
+	//PLAYER
 	static String nick = "";
 	static String pwd = "";
 	static String email = "";
+	//GAMES
 	static String nombre = "";
-	static LocalTime tiempoJugado;
+	static Time tiempoJugado;
 	static int hora = 0;
 	static int minutos = 0;
+	//Compra
 	static int idPlayer = 0;
 	static int idGames = 0;
 	static int idCompra=0;
 	static String cosa = "";
 	static double precio = 0;
+	static LocalDate fechaCompra;
+
 	
 	public static void main(String[] args) {
 
@@ -104,49 +109,55 @@ public class Crud {
 					switch(num) {
 					//CASO 1, MODIFICAR POR ID
 					case 1:
-						System.out.println("Inserte el id del jugador que quieras modificar");
-						idPlayer = sc.nextInt();
-						sc.nextLine();
-						System.out.println("Indica el nombre nuevo");
-						nick = sc.nextLine();
-						System.out.println("Indica la contraseña nueva");
-						pwd = sc.nextLine();
-						System.out.println("Indica el nombre del correo nuevo");
-						email = sc.nextLine();
-						Modificar.modificarJugadorPorId(idPlayer, "", "", nick, pwd, email);
+						modificarPorId();
 						break;
+						//CASO 2, MODIFICAR POR NOMBRE
 					case 2:
-						String nombreBuscar="";
-						System.out.println("Inserte el nombre del jugador que quieras modificar");
-						nombreBuscar= sc.nextLine();
-						System.out.println("Indica el nombre nuevo");
-						nick = sc.nextLine();
-						System.out.println("Indica la contraseña nueva");
-						pwd = sc.nextLine();
-						System.out.println("Indica el nombre del correo nuevo");
-						email = sc.nextLine();
-						Modificar.modificarJugadorPorId(0, nombreBuscar, "", nick, pwd, email);
+						modificarPorNombre();
 						break;
 					case 3:
-						String emailBuscar="";
-						System.out.println("Inserte el nombre del correo del jugador que quieras modificar");
-						emailBuscar= sc.nextLine();
-						System.out.println("Indica el nombre nuevo");
-						nick = sc.nextLine();
-						System.out.println("Indica la contraseña nueva");
-						pwd = sc.nextLine();
-						System.out.println("Indica el nombre del correo nuevo");
-						email = sc.nextLine();
-						Modificar.modificarJugadorPorId(0, "", emailBuscar, nick, pwd, email);
+						//CASO 3, MODIFICAR POR EMAIL
+						modificarPorEmail();
 						break;
-					default:							
+					default:
+						System.out.println(OPCION_INVALIDA);
 					}
 					break;
 				//Compra
 				case 2:
 					break;
-					
+				//Juego
 				case 3:
+					System.out.println("¿QUE FILTRADO QUIERES?");
+					System.out.println("1. ID");
+					System.out.println("2. NOMBRE");
+					num = sc.nextInt();
+					sc.nextLine();
+					switch(num) {
+					//MODIFICAR POR ID
+					case 1:
+						modificarJuegoPorId();
+						break;
+					case 2: 
+						LocalTime t = null;
+						String nombreFiltro="";
+						System.out.println("Indique el nombre del juego a modificar");
+						nombreFiltro = sc.nextLine();
+						System.out.println("Nombre del juego nuevo");
+						nombre = sc.nextLine();
+						System.out.println("Indica las horas nuevas");
+						hora = sc.nextInt();
+						sc.nextLine();
+						System.out.println("Indica los minutos nuevos");
+						minutos = sc.nextInt();
+						sc.nextLine();
+						t = LocalTime.of(hora, minutos);
+						tiempoJugado = Time.valueOf(t);
+						Modificar.modificarDatosGames(0, nombreFiltro, nombre, tiempoJugado);
+						break;
+					default:
+						System.out.println(OPCION_INVALIDA);
+					}
 					break;
 				default:
 				System.out.println(OPCION_INVALIDA);		
@@ -157,6 +168,63 @@ public class Crud {
 
 		sc.close();
 
+	}
+
+	private static void modificarJuegoPorId() {
+		LocalTime t = null;
+		System.out.println("Indique el id del juego a modificar");
+		idGames = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Nombre del juego nuevo");
+		nombre = sc.nextLine();
+		System.out.println("Indica las horas nuevas");
+		hora = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Indica los minutos nuevos");
+		minutos = sc.nextInt();
+		sc.nextLine();
+		t = LocalTime.of(hora, minutos);
+		tiempoJugado = Time.valueOf(t);
+		Modificar.modificarDatosGames(idGames, "", nombre, tiempoJugado);
+	}
+
+	private static void modificarPorEmail() {
+		String emailBuscar="";
+		System.out.println("Inserte el nombre del correo del jugador que quieras modificar");
+		emailBuscar= sc.nextLine();
+		System.out.println("Indica el nombre nuevo");
+		nick = sc.nextLine();
+		System.out.println("Indica la contraseña nueva");
+		pwd = sc.nextLine();
+		System.out.println("Indica el nombre del correo nuevo");
+		email = sc.nextLine();
+		Modificar.modificarDatosJugador(0, "", emailBuscar, nick, pwd, email);
+	}
+
+	private static void modificarPorNombre() {
+		String nombreBuscar="";
+		System.out.println("Inserte el nombre del jugador que quieras modificar");
+		nombreBuscar= sc.nextLine();
+		System.out.println("Indica el nombre nuevo");
+		nick = sc.nextLine();
+		System.out.println("Indica la contraseña nueva");
+		pwd = sc.nextLine();
+		System.out.println("Indica el nombre del correo nuevo");
+		email = sc.nextLine();
+		Modificar.modificarDatosJugador(0, nombreBuscar, "", nick, pwd, email);
+	}
+
+	private static void modificarPorId() {
+		System.out.println("Inserte el id del jugador que quieras modificar");
+		idPlayer = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Indica el nombre nuevo");
+		nick = sc.nextLine();
+		System.out.println("Indica la contraseña nueva");
+		pwd = sc.nextLine();
+		System.out.println("Indica el nombre del correo nuevo");
+		email = sc.nextLine();
+		Modificar.modificarDatosJugador(idPlayer, "", "", nick, pwd, email);
 	}
 
 	private static void subMenuFiltradoJugador() {
@@ -236,7 +304,7 @@ public class Crud {
 			precio = sc.nextDouble();
 			subMenuPrecio();
 			num = sc.nextInt();
-			visualizarPrecio(num, OPCION_INVALIDA, precio);
+			Listado.listadoCompraPorPrecio(precio, num);
 			break;
 		case 6:
 			System.out.println("1. POR AÑO");
@@ -257,20 +325,6 @@ public class Crud {
 		System.out.println("1. MAYOR QUE ESE PRECIO");
 		System.out.println("2. MENOR QUE ESE PRECIO");
 		System.out.println("================================");
-	}
-
-	private static void visualizarPrecio(int num, final String OPCION_INVALIDA, double precio) {
-		switch(num) {
-		case 1:
-			Listado.listadoCompraPorPrecio(precio, num);
-			break;
-			
-		case 2:
-			Listado.listadoCompraPorPrecio(precio, num);
-			break;
-			default:
-				System.out.println(OPCION_INVALIDA);
-		}
 	}
 
 	private static void visuzalizarFecha(int num, final String OPCION_INVALIDA) {
@@ -401,7 +455,6 @@ public class Crud {
 
 	private static void insertarDatoCompras() {
 
-		LocalDate fechaCompra;
 		System.out.println("Inserte el id del jugador que haya comprado algo");
 		idPlayer = sc.nextInt();
 		System.out.println("Inserte el id del juego al que esta jugando");
@@ -438,6 +491,7 @@ public class Crud {
 	}
 
 	private static void insertarDatoJuego() {
+		LocalTime t = null;
 		System.out.println("Nombre del juego al que has jugado");
 		nombre = sc.nextLine();
 		System.out.println("Indica las horas que has jugado");
@@ -446,7 +500,8 @@ public class Crud {
 		System.out.println("Indica los minutos que has jugado");
 		minutos = sc.nextInt();
 		sc.nextLine();
-		tiempoJugado = LocalTime.of(hora, minutos);
+		t = LocalTime.of(hora, minutos);
+		tiempoJugado = Time.valueOf(t);
 		try {
 			Insertar.insertarDatosTablaGames(nombre, tiempoJugado);
 		} catch (CommunicationException e) {

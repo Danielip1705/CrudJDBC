@@ -1,124 +1,226 @@
 package ejercicio2;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Scanner;
-
-import javax.naming.CommunicationException;
-
-import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 
 public class Modificar {
 
 	static Scanner sc = new Scanner(System.in);
 
-	private static String crearCommand(int id, String nombreId, String emailId, String nick, String psw, String email) {
-
-		String command = null;
-
-		if (id != 0 && nombreId.equals("") && emailId.contentEquals("")) {
-
-			command = "UPDATE Player SET nick = '" + nick + "',password = '" + psw + "',email = '" + email
-					+ "' where IdPlayer = " + id + ";";
-
-		} else if (id == 0 && !nombreId.equals("") && emailId.equals("")) {
-
-			command = "UPDATE Player SET nick = '" + nick + "',password = '" + psw + "',email = '" + email
-					+ "' where nick like '" + nombreId + "';";
-
-		} else if (id == 0 && nombreId.equals("") && !emailId.equals("")) {
-			command = "UPDATE Player SET nick = '" + nick + "',password = '" + psw + "',email = '" + email
-					+ "' where email like '%" + emailId + "%';";
-		}
-		return command;
-	}
-
-	private static String crearCommandListado(int id, String nombreId, String emailId) {
-		String command = "";
-		if (id != 0) {
-			// Preparar la sentencia SQL para la consulta
-			command = "SELECT * FROM Player WHERE idPlayer = " + id + ";";
-
-		} else if (!nombreId.equals("")) {
-			// Preparar la sentencia SQL para la consulta
-			command = "SELECT * FROM Player WHERE nick like '" + nombreId + "'";
-
-		} else if (!emailId.equals("")) {
-			// Preparar la sentencia SQL para la consulta
-			command = "SELECT * FROM Player WHERE email like '%" + emailId + "%'";
-		}
-		return command;
-	}
-
-	public static void modificarJugadorPorId(int id, String nombreId, String emailId, String nick, String psw,
-			String email) {
+	public static void modificarDatosJugador(int id, String nombreFiltro, String emailFiltro, String nick,
+			String password, String email) {
 		Connection conn = null;
-		PreparedStatement stmt = null;
-		String command = "";
-		String confirmarCad = "";
-		ResultSet rs = null;
-		int idBuscar = 0;
+		PreparedStatement stmtMod = null;
+		PreparedStatement stmtSelectNew = null;
+		PreparedStatement stmtSelectAnt = null;
+		int idPlayer = 0;
+		String comando = "";
+		String confirmacion = "";
+		int modificado = 0;
+		ResultSet res = null;
 
 		try {
-			// Conectar a la base de datos
+			// Conectamos a la bd
 			conn = Conexion.conectar();
-
-			if (!nombreId.equals("")) {
-				command = "SELECT idPlayer FROM Player WHERE nick = ?";
-				stmt = conn.prepareStatement(command);
-				stmt.setString(1, nombreId);
-				rs = stmt.executeQuery();
-				if(rs.next()) {
-					idBuscar = rs.getInt("idPlayer");
-				}
-				
-				
-			} else if (!emailId.equals("")) {
-				command = "SELECT idPlayer FROM Player WHERE email = ?";
-				stmt = conn.prepareStatement(command);
-				stmt.setString(1, emailId);
-				rs = stmt.executeQuery();
-				if(rs.next()) {
-					idBuscar = rs.getInt("idPlayer");
-				}
-			}
-			// Desactivar autocommit para iniciar una transacción manual
+			// Quitamos el autoCommit
 			conn.setAutoCommit(false);
 
-
-			// Preparar la sentencia SQL para la actualización
-			command = crearCommand(id, nombreId, emailId, nick, psw, email);
-			stmt = conn.prepareStatement(command);
-			
-			// Ejecutar la actualización
-			stmt.executeUpdate();
-
-			System.out.println("=======================================");
-			System.out.println("ID: " + (idBuscar!=0?idBuscar:id));
-			System.out.println("Nick: " + nick);
-			System.out.println("Password: " + psw);
-			System.out.println("Email: " + email);
-			System.out.println("=======================================");
-
-			do {
-				System.out.println("¿QUIERES CONFIRMAR LA TRANSACCION? SI O NO");
-
-				confirmarCad = sc.nextLine().toLowerCase();
-			} while (!confirmarCad.equals("si") && !confirmarCad.equals("no"));
-
-			if (confirmarCad.equals("si")) {
-				conn.commit();
+			if (!nombreFiltro.equals("")) {
+				comando = "SELECT idPlayer FROM Player WHERE nick = ?";
+				stmtSelectAnt = conn.prepareStatement(comando);
+				stmtSelectAnt.setString(1, nombreFiltro);
+				res = stmtSelectAnt.executeQuery();
 			} else {
-				conn.rollback();
+				comando = "SELECT idPlayer FROM Player WHERE email = ?";
+				stmtSelectAnt = conn.prepareStatement(comando);
+				stmtSelectAnt.setString(1, emailFiltro);
+				res = stmtSelectAnt.executeQuery();
+			}
+			if (res.next()) {
+				idPlayer = res.getInt("IdPlayer");
 			}
 
-		} catch (CommunicationsException e) {
-			System.out.println("No se ha podido conectar a la base de datos");
-		} 	catch (SQLException e) { 
+			if (id != 0) {
+				comando = "UPDATE Player SET nick = ?,password = ?,email = ? where idPlayer = ?;";
+				stmtMod = conn.prepareStatement(comando);
+				stmtMod.setString(1, nick);
+				stmtMod.setString(2, password);
+				stmtMod.setString(3, email);
+				stmtMod.setInt(4, id);
+				modificado = stmtMod.executeUpdate();
+
+			} else if (!nombreFiltro.equals("")) {
+				comando = "UPDATE Player SET nick = ?,password = ?,email = ? where nick = ?;";
+				stmtMod = conn.prepareStatement(comando);
+				stmtMod.setString(1, nick);
+				stmtMod.setString(2, password);
+				stmtMod.setString(3, email);
+				stmtMod.setString(4, nombreFiltro);
+				modificado = stmtMod.executeUpdate();
+			} else {
+				comando = "UPDATE Player SET nick = ?,password = ?,email = ? where email = ?;";
+				stmtMod = conn.prepareStatement(comando);
+				stmtMod.setString(1, nick);
+				stmtMod.setString(2, password);
+				stmtMod.setString(3, email);
+				stmtMod.setString(4, emailFiltro);
+				modificado = stmtMod.executeUpdate();
+			}
+
+			if (modificado > 0) {
+				System.out.println("Jugador modificado con exito");
+				if (id != 0) {
+					comando = "SELECT * FROM Player WHERE idPlayer = ?";
+					stmtSelectNew = conn.prepareStatement(comando);
+					stmtSelectNew.setInt(1, id);
+					res = stmtSelectNew.executeQuery();
+
+				} else if (!nombreFiltro.equals("")) {
+					comando = "SELECT * FROM Player WHERE idPlayer = ?";
+					stmtSelectNew = conn.prepareStatement(comando);
+					stmtSelectNew.setInt(1, idPlayer);
+					res = stmtSelectNew.executeQuery();
+				} else {
+					comando = "SELECT * FROM Player WHERE idPlayer = ?";
+					stmtSelectNew = conn.prepareStatement(comando);
+					stmtSelectNew.setInt(1, idPlayer);
+					res = stmtSelectNew.executeQuery();
+				}
+				if (res.next()) {
+					System.out.println("=======================================");
+					System.out.println("ID: " + res.getInt("idPlayer"));
+					System.out.println("Nick: " + res.getString("nick"));
+					System.out.println("Password: " + res.getString("password"));
+					System.out.println("Email: " + res.getString("email"));
+					System.out.println("=======================================");
+				}
+
+				System.out.println("¿QUIERES CONFIRMAR LA TRANSACCION? Indique S(Si) o N(No)");
+				confirmacion = sc.nextLine().toLowerCase();
+
+				while (!confirmacion.equals("s") && !confirmacion.equals("n")) {
+					System.out.println("Indique S o N, no es tan conplicado");
+					confirmacion = sc.nextLine();
+				}
+				if (confirmacion.equals("s")) {
+					conn.commit();
+					System.out.println("TRANSACCION CONFIRMADA");
+				} else {
+					System.out.println("TRANSACCION CANCELADA");
+					conn.rollback();
+				}
+			} else {
+				if(id!=0) {
+					System.err.println("Error: no se ha podido modificar el jugador, error en la BD o el jugador con id: "
+							+ id + " no existe");
+					
+				} else if(!nombreFiltro.equals("")) {
+					System.err.println("Error: no se ha podido modificar el jugador, error en la BD o el jugador con nick: "
+							+ nombreFiltro + " no existe");
+				} else {
+					System.err.println("Error: no se ha podido modificar el jugador, error en la BD o el jugador con email: "
+							+ emailFiltro + " no existe");
+				}
+			}
+
+		} catch (SQLException e) {
+			System.err.println("Error: No se ha podido realizar la consulta");
+		}
+	}
+
+	public static void modificarDatosGames(int id, String nombreFiltro, String nombre, Time tiempoJugado) {
+		Connection conn = null;
+		PreparedStatement stmtMod = null;
+		PreparedStatement stmtSelectNew = null;
+		PreparedStatement stmtSelectOld = null;
+		int idGames = 0;
+		String comando = "";
+		String confirmacion = "";
+		int modificado = 0;
+		ResultSet res = null;
+
+		try {
+			conn = Conexion.conectar();
+			conn.setAutoCommit(false);
+			// Cogemos el id a traves el nombre, lo tenemos que hacer porque si no ocurre
+			// fallos en el select con el nombre(ya que el nombre del juego se borra y no se
+			// muestra)
+			if (!nombreFiltro.equals("")) {
+				comando = "SELECT idGames FROM Games WHERE nombre = ?;";
+				stmtSelectOld = conn.prepareStatement(comando);
+				stmtSelectOld.setString(1, nombreFiltro);
+				res = stmtSelectOld.executeQuery();
+				if (res.next()) {
+					idGames = res.getInt("idGames");
+				}
+			}
 			
-			e.printStackTrace();
+			if(id!=0) {
+				comando = "UPDATE Games SET nombre = ?, tiempojugado= ? where idGames = ?;";
+				stmtMod = conn.prepareStatement(comando);
+				stmtMod.setString(1, nombre);
+				stmtMod.setTime(2, tiempoJugado);
+				stmtMod.setInt(3, id);
+				modificado = stmtMod.executeUpdate();
+			} else if(!nombreFiltro.equals("")) {
+				comando = "UPDATE Games SET nombre = ?, tiempojugado= ? where nombre = ?";
+				stmtMod = conn.prepareStatement(comando);
+				stmtMod.setString(1, nombre);
+				stmtMod.setTime(2, tiempoJugado);
+				stmtMod.setString(3, nombreFiltro);
+				modificado = stmtMod.executeUpdate();
+			}
+			
+			if(modificado>0) {
+				if(id!=0) {
+					comando = "SELECT * FROM Games WHERE idGames = ?";
+					stmtSelectNew = conn.prepareStatement(comando);
+					stmtSelectNew.setInt(1, id);
+					res = stmtSelectNew.executeQuery();
+				} else {
+					comando = "SELECT * FROM Games WHERE idGames = ?";
+					stmtSelectNew = conn.prepareStatement(comando);
+					stmtSelectNew.setInt(1, idGames);
+					res = stmtSelectNew.executeQuery();
+				}
+				if(res.next()) {
+					System.out.println("=========================");
+					System.out.println("ID: "+ res.getInt("idGames"));
+					System.out.println("Nombre: " + res.getString("nombre"));
+					System.out.println("Tiempo jugado: "+ res.getTime("tiempoJugado"));
+					System.out.println("=========================");
+				}
+				System.out.println("¿QUIERES CONFIRMAR LA TRANSACCION? Indique S(Si) o N(No)");
+				confirmacion = sc.nextLine().toLowerCase();
+
+				while (!confirmacion.equals("s") && !confirmacion.equals("n")) {
+					System.out.println("Indique S o N, no es tan conplicado");
+					confirmacion = sc.nextLine();
+				}
+				if (confirmacion.equals("s")) {
+					conn.commit();
+					System.out.println("TRANSACCION CONFIRMADA");
+				} else {
+					System.out.println("TRANSACCION CANCELADA");
+					conn.rollback();
+				}
+			} else {
+				if(id!=0) {
+					System.err.println("Error: no se ha podido modificar el juego, error en la BD o el juego con id: "
+							+ id + " no existe");					
+				} else {
+					System.err.println("Error: no se ha podido modificar el juego, error en la BD o el juego con nombre : "
+							+ nombre + " no existe");
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 	}
 }
