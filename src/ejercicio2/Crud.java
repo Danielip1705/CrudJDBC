@@ -9,165 +9,339 @@ import java.util.Scanner;
 import javax.naming.CommunicationException;
 
 public class Crud {
-	
+
 	static Scanner sc = new Scanner(System.in);
-	//PLAYER
+	// PLAYER
 	static String nick = "";
 	static String pwd = "";
 	static String email = "";
-	//GAMES
+	// GAMES
 	static String nombre = "";
 	static Time tiempoJugado;
 	static int hora = 0;
 	static int minutos = 0;
-	//Compra
+	// Compra
 	static int idPlayer = 0;
 	static int idGames = 0;
-	static int idCompra=0;
+	static int idCompra = 0;
 	static String cosa = "";
 	static double precio = 0;
 	static LocalDate fechaCompra;
 
-	
 	public static void main(String[] args) {
 
+		// Inicializa el programa y muestra el menú hasta que el usuario elija salir.
 		int num = -1;
-		final String OPCION_INVALIDA="ESTA OPCION NO EXISTE";
-		
+		final String OPCION_INVALIDA = "ESTA OPCION NO EXISTE";
 
 		while (num != 0) {
-			menu();
-			num = sc.nextInt();
-			switch (num) {
-			// Para mostrar la conexion a la base de datos
-			case 1:
-				System.out.println(Conexion.conectar());
-				break;
-			// Para crear las tablas
-			case 2:
-				subMenuTabla();
-				num = sc.nextInt();
-				crearTablas(num);
-				break;
-			case 3:
-				subMenuInsertar();
-				num = sc.nextInt();
-				sc.nextLine();
-				switch (num) {
-				case 1:
-					insertarDatosPlayer();
-					break;
-				case 2:
-					insertarDatoCompras();
-					break;
-				case 3:
-					insertarDatoJuego();
-					break;
+		    // Muestra el menú principal.
+		    menu();
+		    num = sc.nextInt();
+		    switch (num) {
+		        // Caso 1: Muestra la conexión a la base de datos.
+		        case 1:
+		            System.out.println(Conexion.conectar());
+		            break;
 
-				}
-				break;
-			// Listado de las tablas
-			case 4:
-				subMenuMostrarTablas();
-				num = sc.nextInt();
-				sc.nextLine();
-				switch (num) {
-				// Jugadores
-				case 1:
-					subMenuListadoJugador();
-					num = sc.nextInt();
-					sc.nextLine();
-					visualizacionTablaJugador(num);
-					break;
-				// Compras
-				case 2:
-					subMenuCompra();
-					num = sc.nextInt();
-					num = visualizarCompra(num, OPCION_INVALIDA);
-					break;
-				// Games
-				case 3:
-					subMenuListadogGame();
-					num = sc.nextInt();
-					sc.nextLine();
-					visualizacionTablaGames(num);
-					break;
-				}
+		        // Caso 2: Muestra el submenú para crear tablas y permite su creación.
+		        case 2:
+		            subMenuTabla();
+		            num = sc.nextInt();
+		            crearTablas(num);
+		            break;
 
-				break;
-			//MODIFICAR 
-			case 5:
-				subMenuMostrarTablas();
-				num = sc.nextInt();
-				sc.nextLine();
-				switch(num) {
-				//MODIFICAR JUGADOR
-				case 1:
-					subMenuFiltradoJugador();
-					num = sc.nextInt();
-					sc.nextLine();
-					switch(num) {
-					//CASO 1, MODIFICAR POR ID
-					case 1:
-						modificarPorId();
-						break;
-						//CASO 2, MODIFICAR POR NOMBRE
-					case 2:
-						modificarPorNombre();
-						break;
-					case 3:
-						//CASO 3, MODIFICAR POR EMAIL
-						modificarPorEmail();
-						break;
-					default:
-						System.out.println(OPCION_INVALIDA);
-					}
-					break;
-				//Compra
-				case 2:
-					break;
-				//Juego
-				case 3:
-					System.out.println("¿QUE FILTRADO QUIERES?");
-					System.out.println("1. ID");
-					System.out.println("2. NOMBRE");
-					num = sc.nextInt();
-					sc.nextLine();
-					switch(num) {
-					//MODIFICAR POR ID
-					case 1:
-						modificarJuegoPorId();
-						break;
-					case 2: 
-						LocalTime t = null;
-						String nombreFiltro="";
-						System.out.println("Indique el nombre del juego a modificar");
-						nombreFiltro = sc.nextLine();
-						System.out.println("Nombre del juego nuevo");
-						nombre = sc.nextLine();
-						System.out.println("Indica las horas nuevas");
-						hora = sc.nextInt();
-						sc.nextLine();
-						System.out.println("Indica los minutos nuevos");
-						minutos = sc.nextInt();
-						sc.nextLine();
-						t = LocalTime.of(hora, minutos);
-						tiempoJugado = Time.valueOf(t);
-						Modificar.modificarDatosGames(0, nombreFiltro, nombre, tiempoJugado);
-						break;
-					default:
-						System.out.println(OPCION_INVALIDA);
-					}
-					break;
-				default:
-				System.out.println(OPCION_INVALIDA);		
-				}
-				break;
-			}
+		        // Caso 3: Inserta datos en las tablas seleccionadas.
+		        case 3:
+		            subMenuInsertar();
+		            num = sc.nextInt();
+		            sc.nextLine();
+		            switch (num) {
+		                // Inserta datos en la tabla Player.
+		                case 1:
+		                    insertarDatosPlayer();
+		                    break;
+		                // Inserta datos en la tabla Compras.
+		                case 2:
+		                    insertarDatoCompras();
+		                    break;
+		                // Inserta datos en la tabla Games.
+		                case 3:
+		                    insertarDatoJuego();
+		                    break;
+		            }
+		            break;
+
+		        // Caso 4: Muestra datos de las tablas seleccionadas.
+		        case 4:
+		            subMenuMostrarTablas();
+		            num = sc.nextInt();
+		            sc.nextLine();
+		            switch (num) {
+		                // Muestra datos de la tabla Jugadores.
+		                case 1:
+		                    subMenuListadoJugador();
+		                    num = sc.nextInt();
+		                    sc.nextLine();
+		                    visualizacionTablaJugador(num);
+		                    break;
+		                // Muestra datos de la tabla Compras.
+		                case 2:
+		                    subMenuCompra();
+		                    num = sc.nextInt();
+		                    num = visualizarCompra(num, OPCION_INVALIDA);
+		                    break;
+		                // Muestra datos de la tabla Games.
+		                case 3:
+		                    subMenuListadogGame();
+		                    num = sc.nextInt();
+		                    sc.nextLine();
+		                    visualizacionTablaGames(num);
+		                    break;
+		            }
+		            break;
+
+		        // Caso 5: Permite modificar registros en las tablas.
+		        case 5:
+		            subMenuMostrarTablas();
+		            num = sc.nextInt();
+		            sc.nextLine();
+		            switch (num) {
+		                // Modifica datos de la tabla Jugadores.
+		                case 1:
+		                    subMenuFiltradoJugador();
+		                    num = sc.nextInt();
+		                    sc.nextLine();
+		                    switch (num) {
+		                        // Modifica un jugador por ID.
+		                        case 1:
+		                            modificarPorId();
+		                            break;
+		                        // Modifica un jugador por nombre.
+		                        case 2:
+		                            modificarPorNombre();
+		                            break;
+		                        // Modifica un jugador por email.
+		                        case 3:
+		                            modificarPorEmail();
+		                            break;
+		                        default:
+		                            System.out.println(OPCION_INVALIDA);
+		                    }
+		                    break;
+
+		                // Modifica datos de la tabla Compras.
+		                case 2:
+		                    System.out.println("¿QUE FILTRADO QUIERES?");
+		                    System.out.println("1. ID");
+		                    num = sc.nextInt();
+		                    sc.nextLine();
+		                    switch (num) {
+		                        // Modifica una compra por ID.
+		                        case 1:
+		                            modificarCompraPorId();
+		                            break;
+		                        default:
+		                            System.out.println(OPCION_INVALIDA);
+		                    }
+		                    break;
+
+		                // Modifica datos de la tabla Games.
+		                case 3:
+		                    System.out.println("¿QUE FILTRADO QUIERES?");
+		                    System.out.println("1. ID");
+		                    System.out.println("2. NOMBRE");
+		                    num = sc.nextInt();
+		                    sc.nextLine();
+		                    switch (num) {
+		                        // Modifica un juego por ID.
+		                        case 1:
+		                            modificarJuegoPorId();
+		                            break;
+		                        // Modifica un juego por nombre.
+		                        case 2:
+		                            modificarJuegoPorNombre();
+		                            break;
+		                        default:
+		                            System.out.println(OPCION_INVALIDA);
+		                    }
+		                    break;
+		                default:
+		                    System.out.println(OPCION_INVALIDA);
+		            }
+		            break;
+
+		        // Caso 6: Permite borrar tablas completas o datos específicos.
+		        case 6:
+		            System.out.println("¿QUE QUIERES BORRAR?");
+		            System.out.println("1. TABLAS");
+		            System.out.println("2. DATOS DE LAS TABLAS");
+		            num = sc.nextInt();
+		            sc.nextLine();
+		            switch (num) {
+		                // Borra tablas completas.
+		                case 1:
+		                    System.out.println("¿CUALES QUIERES BORRAR?");
+		                    System.out.println("1. TODAS");
+		                    System.out.println("2. PLAYER");
+		                    System.out.println("3. COMPRAS");
+		                    System.out.println("4. GAMES");
+		                    num = sc.nextInt();
+		                    sc.nextLine();
+		                    switch (num) {
+		                        // Borra todas las tablas.
+		                        case 1:
+		                            Borrar.borrarTodasTablas();
+		                            break;
+		                        // Borra la tabla Player.
+		                        case 2:
+		                            Borrar.borrarTablas("Player");
+		                            break;
+		                        // Borra la tabla Compras.
+		                        case 3:
+		                            Borrar.borrarTablas("Compras");
+		                            break;
+		                        // Borra la tabla Games.
+		                        case 4:
+		                            Borrar.borrarTablas("Games");
+		                            break;
+		                        default:
+		                            System.out.println(OPCION_INVALIDA);
+		                    }
+		                    break;
+
+		                // Borra datos específicos de una tabla.
+		                case 2:
+		                    System.out.println("¿DE QUE TABLA QUIERES BORRAR EL DATO EN CONCRETO?");
+		                    System.out.println("1. PLAYER");
+		                    System.out.println("2. COMPRAS");
+		                    System.out.println("3. GAMES");
+		                    num = sc.nextInt();
+		                    sc.nextLine();
+		                    switch (num) {
+		                        // Borra un jugador según el criterio seleccionado.
+		                        case 1:
+		                            subMenuFiltradoJugador();
+		                            num = sc.nextInt();
+		                            sc.nextLine();
+		                            switch (num) {
+		                                // Borra un jugador por ID.
+		                                case 1:
+		                                    System.out.println("Indique el id del jugador a borrar");
+		                                    idPlayer = sc.nextInt();
+		                                    sc.nextLine();
+		                                    Borrar.borrarDatos(idPlayer, "", "", "Player", "idPlayer");
+		                                    break;
+		                                // Borra un jugador por nombre.
+		                                case 2:
+		                                    System.out.println("Indique el nombre del jugador a borrar");
+		                                    nick = sc.nextLine();
+		                                    Borrar.borrarDatos(0, nick, "", "Player", "nick");
+		                                    break;
+		                                // Borra un jugador por email.
+		                                case 3:
+		                                    System.out.println("Indique el email del jugador a borrar");
+		                                    email = sc.nextLine();
+		                                    Borrar.borrarDatos(0, "", email, "Player", "email");
+		                                    break;
+		                                default:
+		                                    System.out.println(OPCION_INVALIDA);
+		                            }
+		                            break;
+
+		                        // Borra una compra por ID.
+		                        case 2:
+		                            System.out.println("Inserte el id de la compra a borrar");
+		                            idCompra = sc.nextInt();
+		                            sc.nextLine();
+		                            Borrar.borrarDatos(idCompra, "", "", "Compras", "idCompra");
+		                            break;
+
+		                        // Borra un juego según el criterio seleccionado.
+		                        case 3:
+		                            System.out.println("¿COMO QUIERES FILTRARLO?");
+		                            System.out.println("1. POR ID");
+		                            System.out.println("2. NOMBRE");
+		                            num = sc.nextInt();
+		                            sc.nextLine();
+		                            switch (num) {
+		                                // Borra un juego por ID.
+		                                case 1:
+		                                    System.out.println("Indique el id del juego a borrar");
+		                                    idGames = sc.nextInt();
+		                                    sc.nextLine();
+		                                    Borrar.borrarDatos(idGames, "", "", "Games", "idGames");
+		                                    break;
+		                                // Borra un juego por nombre.
+		                                case 2:
+		                                    System.out.println("Indique el nombre del juego a borrar");
+		                                    nombre = sc.nextLine();
+		                                    Borrar.borrarDatos(0, nombre, "", "Games", "nombre");
+		                                    break;
+		                                default:
+		                                    System.out.println(OPCION_INVALIDA);
+		                            }
+		                            break;
+		                        default:
+		                            System.out.println(OPCION_INVALIDA);
+		                    }
+		                    break;
+		                default:
+		                    System.out.println(OPCION_INVALIDA);
+		            }
+		    }
 		}
 
+		// Cierra scanner
 		sc.close();
+	}
 
+
+	private static void modificarCompraPorId() {
+		int año,mes, dia = 0;
+		System.out.println("Inserte el id de la compra que quieres modificar");
+		idCompra = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Inserte el id del jugador modificado");
+		idPlayer = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Inserte el id del juego modificado");
+		idGames = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Inserte el objeto que ha comprado el jugador modificado");
+		cosa = sc.nextLine();
+		System.out.println("Inserte el precio del objeto modificado");
+		precio = sc.nextDouble();
+		sc.nextLine();
+		System.out.println("Indica el año del registro modificado");
+		año = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Indica el mes del registro modificado");
+		mes = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Indica el dia del registro modificado");
+		dia = sc.nextInt();
+		sc.nextLine();
+		fechaCompra = LocalDate.of(año, mes, dia);
+		Modificar.modificarDatosCompra(idCompra, idPlayer, idGames, cosa, precio, fechaCompra);
+	}
+
+	private static void modificarJuegoPorNombre() {
+		LocalTime t = null;
+		String nombreFiltro = "";
+		System.out.println("Indique el nombre del juego a modificar");
+		nombreFiltro = sc.nextLine();
+		System.out.println("Nombre del juego nuevo");
+		nombre = sc.nextLine();
+		System.out.println("Indica las horas nuevas");
+		hora = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Indica los minutos nuevos");
+		minutos = sc.nextInt();
+		sc.nextLine();
+		t = LocalTime.of(hora, minutos);
+		tiempoJugado = Time.valueOf(t);
+		Modificar.modificarDatosGames(0, nombreFiltro, nombre, tiempoJugado);
 	}
 
 	private static void modificarJuegoPorId() {
@@ -189,9 +363,9 @@ public class Crud {
 	}
 
 	private static void modificarPorEmail() {
-		String emailBuscar="";
+		String emailBuscar = "";
 		System.out.println("Inserte el nombre del correo del jugador que quieras modificar");
-		emailBuscar= sc.nextLine();
+		emailBuscar = sc.nextLine();
 		System.out.println("Indica el nombre nuevo");
 		nick = sc.nextLine();
 		System.out.println("Indica la contraseña nueva");
@@ -202,9 +376,9 @@ public class Crud {
 	}
 
 	private static void modificarPorNombre() {
-		String nombreBuscar="";
+		String nombreBuscar = "";
 		System.out.println("Inserte el nombre del jugador que quieras modificar");
-		nombreBuscar= sc.nextLine();
+		nombreBuscar = sc.nextLine();
 		System.out.println("Indica el nombre nuevo");
 		nick = sc.nextLine();
 		System.out.println("Indica la contraseña nueva");
@@ -228,19 +402,19 @@ public class Crud {
 	}
 
 	private static void subMenuFiltradoJugador() {
-		System.out.println("¿QUIERES FILTRARLO?");
+		System.out.println("¿COMO QUIERES FILTRARLO?");
 		System.out.println("1. POR ID");
 		System.out.println("2. POR NOMBRE");
 		System.out.println("3. POR EMAIL");
 	}
 
 	private static int visualizarCompra(int num, final String OPCION_INVALIDA) {
-		switch(num) {
-		//Todos
+		switch (num) {
+		// Todos
 		case 1:
 			Listado.listadoCompra();
 			break;
-		//Id compra
+		// Id compra
 		case 2:
 			boolean superoId = true;
 			int id = 0;
@@ -259,7 +433,7 @@ public class Crud {
 			sc.nextLine();
 			Listado.listadoCompraPorId(idCompra, "IdCompra");
 			break;
-		//Id jugador
+		// Id jugador
 		case 3:
 			superoId = true;
 			id = 0;
@@ -278,7 +452,7 @@ public class Crud {
 			sc.nextLine();
 			Listado.listadoCompraPorId(id, "idPlayer");
 			break;
-		//IdCompra
+		// IdCompra
 		case 4:
 			superoId = true;
 			id = 0;
@@ -297,7 +471,7 @@ public class Crud {
 			sc.nextLine();
 			Listado.listadoCompraPorId(id, "idGames");
 			break;
-			//Por precio
+		// Por precio
 		case 5:
 			double precio = 0;
 			System.out.println("INDIQUE EL PRECIO");
@@ -309,7 +483,7 @@ public class Crud {
 		case 6:
 			System.out.println("1. POR AÑO");
 			System.out.println("2. POR AÑO Y MES");
-			num=sc.nextInt();
+			num = sc.nextInt();
 			sc.nextLine();
 			visuzalizarFecha(num, OPCION_INVALIDA);
 			break;
@@ -328,16 +502,16 @@ public class Crud {
 	}
 
 	private static void visuzalizarFecha(int num, final String OPCION_INVALIDA) {
-		switch(num) {
+		switch (num) {
 		case 1:
 			int año = 0;
 			System.out.println("INDICA EL AÑO A BUSCAR");
 			año = sc.nextInt();
 			Listado.listadoCompraPorFecha(año, 0, num);
-			break;							
+			break;
 		case 2:
 			año = 0;
-			int mes =0;
+			int mes = 0;
 			System.out.println("INDICA EL AÑO A BUSCAR");
 			año = sc.nextInt();
 			sc.nextLine();
@@ -424,7 +598,7 @@ public class Crud {
 			Listado.listadoPlayerPorNombre(nombre);
 			break;
 		case 4:
-			String email="";
+			String email = "";
 			System.out.println("INSERTE EL EMAIL DEL JUGADOR");
 			email = sc.nextLine();
 			Listado.listadoPlayerPorCorreo(email);
@@ -437,6 +611,7 @@ public class Crud {
 		System.out.println("2. POR ID");
 		System.out.println("3. POR NOMBRE");
 	}
+
 	private static void subMenuListadoJugador() {
 		System.out.println("1. TODOS");
 		System.out.println("2. POR ID");
@@ -454,7 +629,7 @@ public class Crud {
 	}
 
 	private static void insertarDatoCompras() {
-
+		int dia,mes,año=0;
 		System.out.println("Inserte el id del jugador que haya comprado algo");
 		idPlayer = sc.nextInt();
 		System.out.println("Inserte el id del juego al que esta jugando");
@@ -465,7 +640,16 @@ public class Crud {
 		System.out.println("Inserte el precio del objeto");
 		precio = sc.nextDouble();
 		sc.nextLine();
-		fechaCompra = LocalDate.now();
+		System.out.println("Indica el año del registro");
+		año = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Indica el mes del registro");
+		mes = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Indica el dia del registro");
+		dia = sc.nextInt();
+		sc.nextLine();
+		fechaCompra = LocalDate.of(año, mes, dia);
 
 		Insertar.insertarDatosTablaCompra(idPlayer, idGames, cosa, precio, fechaCompra);
 

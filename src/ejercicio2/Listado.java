@@ -27,7 +27,17 @@ public class Listado {
 				System.out.println("=======================================");
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				stmt.close();
+				lector.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -54,7 +64,17 @@ public class Listado {
 				System.out.println("=======================================");
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				stmt.close();
+				lector.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -84,8 +104,18 @@ public class Listado {
 			System.out.println("El nombre indicado (" + nombre + ") no exite en la tabla Player");
 
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
 
+		} finally {
+
+			try {
+				conn.close();
+				stmt.close();
+				lector.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -115,13 +145,22 @@ public class Listado {
 			System.out.println("El nombre indicado (" + email + ") no exite en la tabla Player");
 
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
 
+		} finally {
+
+			try {
+				conn.close();
+				stmt.close();
+				lector.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
 
-	
 	///////////////////////////////////////////////////////////////////////////////
 	// Games
 
@@ -145,7 +184,17 @@ public class Listado {
 				System.out.println("=======================================");
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				query.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -171,7 +220,17 @@ public class Listado {
 				System.out.println("=======================================");
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				stmt.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -200,8 +259,18 @@ public class Listado {
 			System.out.println("El nombre indicado (" + nombre + ") no exite en la tabla Player");
 
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
 
+		} finally {
+
+			try {
+				conn.close();
+				stmt.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -218,34 +287,44 @@ public class Listado {
 		int juegos = 0;
 		try {
 			conn = Conexion.conectar();
-			if(tabla.equals("Games")) {
-				
-				query = conn.prepareStatement("SELECT count(idGames) FROM "+tabla+";");
-			} else if(tabla.equals("Player")) {
-				query = conn.prepareStatement("SELECT count(idPlayer) FROM "+tabla+";");
-			} else if(tabla.equals("Compras")) {
-				query = conn.prepareStatement("SELECT count(idCompra) FROM "+tabla+";");
+			if (tabla.equals("Games")) {
+
+				query = conn.prepareStatement("SELECT count(idGames) FROM " + tabla + ";");
+			} else if (tabla.equals("Player")) {
+				query = conn.prepareStatement("SELECT count(idPlayer) FROM " + tabla + ";");
+			} else if (tabla.equals("Compras")) {
+				query = conn.prepareStatement("SELECT count(idCompra) FROM " + tabla + ";");
 			}
 			res = query.executeQuery();
 			while (res.next()) {
 				juegos = res.getInt(1);
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch (SQLException e) {
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				query.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return juegos;
 	}
-	
+
 	////////////////////////////////////////////////////
-	//COMPRAS
-	
+	// COMPRAS
+
 	/**
 	 * Funcion que muestra todas las compras de la base de datos
 	 */
 	public static void listadoCompra() {
-		Connection conn=null;
-		PreparedStatement query= null;
+		Connection conn = null;
+		PreparedStatement query = null;
 		ResultSet res = null;
 		System.out.println("=======================================");
 		try {
@@ -253,110 +332,174 @@ public class Listado {
 			query = conn.prepareStatement("SELECT * FROM Compras");
 			res = query.executeQuery();
 			System.out.println("=======================================");
-			while(res.next()) {
-				System.out.println("ID: "+ res.getInt("idCompra"));
-				System.out.println("ID jugador: "+ res.getInt("idPlayer"));
-				System.out.println("ID juego: "+ res.getInt("idGames"));
-				System.out.println("Cosa: "+ res.getString("cosa"));
-				System.out.println("Precio: "+ res.getDouble("precio"));
-				System.out.println("Fecha compra: "+res.getDate("fechaCompra"));
+			while (res.next()) {
+				System.out.println("ID: " + res.getInt("idCompra"));
+				System.out.println("ID jugador: " + res.getInt("idPlayer"));
+				System.out.println("ID juego: " + res.getInt("idGames"));
+				System.out.println("Cosa: " + res.getString("cosa"));
+				System.out.println("Precio: " + res.getDouble("precio"));
+				System.out.println("Fecha compra: " + res.getDate("fechaCompra"));
 				System.out.println("=======================================");
 
 			}
-		}catch (SQLException e) {
-			// TODO: handle exception
+		} catch (SQLException e) {
+			System.err.println("Error: Error en la BD");
+		} finally {
+
+			try {
+				conn.close();
+				query.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
-	
-	public static void listadoCompraPorId(int id,String atributoId) {
-		Connection conn=null;
-		PreparedStatement query= null;
+
+	/**
+	 * Funcion que muestra una lista de compra por el id de la compra,juego y
+	 * jugaddor
+	 * 
+	 * @param id         Numero entero que indica el id
+	 * @param atributoId Cadena que muestra que dato de la tabla se realizara el
+	 *                   filtro
+	 */
+	public static void listadoCompraPorId(int id, String atributoId) {
+		Connection conn = null;
+		PreparedStatement query = null;
 		ResultSet res = null;
 		System.out.println("=======================================");
 		try {
 			conn = Conexion.conectar();
-			query = conn.prepareStatement("SELECT * FROM Compras where "+atributoId+" = "+id+";");
+			query = conn.prepareStatement("SELECT * FROM Compras where " + atributoId + " = " + id + ";");
 			res = query.executeQuery();
 			System.out.println("=======================================");
-			while(res.next()) {
-				System.out.println("ID: "+ res.getInt("idCompra"));
-				System.out.println("ID jugador: "+ res.getInt("idPlayer"));
-				System.out.println("ID juego: "+ res.getInt("idGames"));
-				System.out.println("Cosa: "+ res.getString("cosa"));
-				System.out.println("Precio: "+ res.getDouble("precio"));
-				System.out.println("Fecha compra: "+res.getDate("fechaCompra"));
+			while (res.next()) {
+				System.out.println("ID: " + res.getInt("idCompra"));
+				System.out.println("ID jugador: " + res.getInt("idPlayer"));
+				System.out.println("ID juego: " + res.getInt("idGames"));
+				System.out.println("Cosa: " + res.getString("cosa"));
+				System.out.println("Precio: " + res.getDouble("precio"));
+				System.out.println("Fecha compra: " + res.getDate("fechaCompra"));
 				System.out.println("=======================================");
 
 			}
-		}catch (SQLException e) {
-			// TODO: handle exception
+		} catch (SQLException e) {
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				query.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
+	/**
+	 * Funcion que muestra un listado de compras segun el precio
+	 * 
+	 * @param precio Numero decimal que indica el precio
+	 * @param opc    Numero entero que indica que filtro se va a realizar (1=
+	 *               filtras la compra menor que precio, 2= Filtrar la compra mayor
+	 *               que el precio)
+	 */
 	public static void listadoCompraPorPrecio(double precio, int opc) {
-		Connection conn=null;
-		PreparedStatement query= null;
+		Connection conn = null;
+		PreparedStatement query = null;
 		ResultSet res = null;
 		System.out.println("=======================================");
 		try {
 			conn = Conexion.conectar();
-			switch(opc) {
+			switch (opc) {
 			case 1:
-				query = conn.prepareStatement("SELECT * FROM Compras where precio < "+precio+";");
+				query = conn.prepareStatement("SELECT * FROM Compras where precio < " + precio + ";");
 				break;
 			case 2:
-				query = conn.prepareStatement("SELECT * FROM Compras where precio > "+precio+";");
+				query = conn.prepareStatement("SELECT * FROM Compras where precio > " + precio + ";");
 				break;
 			}
 			res = query.executeQuery();
 			System.out.println("=======================================");
-			while(res.next()) {
-				System.out.println("ID: "+ res.getInt("idCompra"));
-				System.out.println("ID jugador: "+ res.getInt("idPlayer"));
-				System.out.println("ID juego: "+ res.getInt("idGames"));
-				System.out.println("Cosa: "+ res.getString("cosa"));
-				System.out.println("Precio: "+ res.getDouble("precio"));
-				System.out.println("Fecha compra: "+res.getDate("fechaCompra"));
+			while (res.next()) {
+				System.out.println("ID: " + res.getInt("idCompra"));
+				System.out.println("ID jugador: " + res.getInt("idPlayer"));
+				System.out.println("ID juego: " + res.getInt("idGames"));
+				System.out.println("Cosa: " + res.getString("cosa"));
+				System.out.println("Precio: " + res.getDouble("precio"));
+				System.out.println("Fecha compra: " + res.getDate("fechaCompra"));
 				System.out.println("=======================================");
 
 			}
-		}catch (SQLException e) {
-			// TODO: handle exception
+		} catch (SQLException e) {
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				query.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
-	
-	public static void listadoCompraPorFecha(int año,int mes, int opc) {
-		Connection conn=null;
-		PreparedStatement query= null;
+
+	/**
+	 * Funcion que muestra un listado dependiendo de la fecha
+	 * 
+	 * @param año numero entero que indica el año
+	 * @param mes numero entero que indica el mes
+	 * @param opc numero entero que indica si filtrar por año o mes
+	 */
+	public static void listadoCompraPorFecha(int año, int mes, int opc) {
+		Connection conn = null;
+		PreparedStatement query = null;
 		ResultSet res = null;
 		System.out.println("=======================================");
 		try {
 			conn = Conexion.conectar();
-			switch(opc) {
+			switch (opc) {
 			case 1:
-                query = conn.prepareStatement("SELECT * FROM Compras WHERE YEAR(fechaCompra) = ?");
-                query.setInt(1, año); 
-                break;
-            case 2:
-                query = conn.prepareStatement("SELECT * FROM Compras WHERE YEAR(fechaCompra) = ? AND MONTH(fechaCompra) = ?");
-                query.setInt(1, año); 
-                query.setInt(2, mes); 
-                break;
+				query = conn.prepareStatement("SELECT * FROM Compras WHERE YEAR(fechaCompra) = ?");
+				query.setInt(1, año);
+				break;
+			case 2:
+				query = conn.prepareStatement(
+						"SELECT * FROM Compras WHERE YEAR(fechaCompra) = ? AND MONTH(fechaCompra) = ?");
+				query.setInt(1, año);
+				query.setInt(2, mes);
+				break;
 			}
 			res = query.executeQuery();
 			System.out.println("=======================================");
-			while(res.next()) {
-				System.out.println("ID: "+ res.getInt("idCompra"));
-				System.out.println("ID jugador: "+ res.getInt("idPlayer"));
-				System.out.println("ID juego: "+ res.getInt("idGames"));
-				System.out.println("Cosa: "+ res.getString("cosa"));
-				System.out.println("Precio: "+ res.getDouble("precio"));
-				System.out.println("Fecha compra: "+res.getDate("fechaCompra"));
+			while (res.next()) {
+				System.out.println("ID: " + res.getInt("idCompra"));
+				System.out.println("ID jugador: " + res.getInt("idPlayer"));
+				System.out.println("ID juego: " + res.getInt("idGames"));
+				System.out.println("Cosa: " + res.getString("cosa"));
+				System.out.println("Precio: " + res.getDouble("precio"));
+				System.out.println("Fecha compra: " + res.getDate("fechaCompra"));
 				System.out.println("=======================================");
 
 			}
-		}catch (SQLException e) {
-			// TODO: handle exception
+		} catch (SQLException e) {
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				query.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -5,15 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
-
 import javax.naming.CommunicationException;
 
 public class Insertar {
 
+	/**
+	 * Cuenta la cantidad de registros en una tabla específica.
+	 * 
+	 * @param tabla Nombre de la tabla de la cual se contarán los registros.
+	 * @return La cantidad de registros en la tabla.
+	 */
 	public static int contadorEntidades(String tabla) {
 		Connection conn = null;
 		PreparedStatement query = null;
@@ -21,18 +26,27 @@ public class Insertar {
 		int contador = 0;
 		try {
 			conn = Conexion.conectar();
-			query = conn.prepareStatement("SELECT count(id) FROM "+tabla);
+			query = conn.prepareStatement("SELECT count(id) FROM " + tabla);
 			res = query.executeQuery();
 			while (res.next()) {
 				contador = res.getInt(1);
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch (SQLException e) {
+			System.err.println("Error: La BD ha producido un error");
 		}
 		return contador;
 	}
-	
-	public static void insertarDatosTablaJugador(String nick,String psw,String email) throws CommunicationException {
+
+	/**
+	 * Inserta un nuevo registro en la tabla 'Player'.
+	 * 
+	 * @param nick  Nombre del jugador.
+	 * @param psw   Contraseña del jugador.
+	 * @param email Correo electrónico del jugador.
+	 * @throws CommunicationException En caso de problemas de conexión con la base
+	 *                                de datos.
+	 */
+	public static void insertarDatosTablaJugador(String nick, String psw, String email) throws CommunicationException {
 		Connection con = null;
 		Statement stmt = null;
 		String comando = "";
@@ -41,19 +55,37 @@ public class Insertar {
 			con = Conexion.conectar();
 			stmt = con.createStatement();
 			contador = contadorEntidades("Player");
-			if(contador<=0) {
+			if (contador <= 0) {
 				stmt.executeUpdate("ALTER TABLE Player AUTO_INCREMENT = 1;");
 			}
-			comando = "insert into Player (nick,password,email) values('"+nick+"','"+psw+"','"+email+"');";
+			comando = "insert into Player (nick,password,email) values('" + nick + "','" + psw + "','" + email + "');";
 			stmt.executeUpdate(comando);
-			System.out.println("Se ha insertado el jugador con exito");
-		
+			System.out.println("Se ha insertado el jugador con éxito");
+		} catch (SQLSyntaxErrorException e) {
+			System.err.println("Error: No existe la tabla Player");
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				con.close();
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
-	
-	public static void insertarDatosTablaGames(String nick,Time tiempoJugado) throws CommunicationException {
+
+	/**
+	 * Inserta un nuevo registro en la tabla 'Games'.
+	 * 
+	 * @param nick         Nombre del juego.
+	 * @param tiempoJugado Tiempo total jugado, representado como un objeto Time.
+	 * @throws CommunicationException En caso de problemas de conexión con la base
+	 *                                de datos.
+	 */
+	public static void insertarDatosTablaGames(String nick, Time tiempoJugado) throws CommunicationException {
 		Connection con = null;
 		Statement stmt = null;
 		String comando = "";
@@ -62,19 +94,39 @@ public class Insertar {
 			con = Conexion.conectar();
 			stmt = con.createStatement();
 			contador = contadorEntidades("Games");
-			if(contador<=0) {
+			if (contador <= 0) {
 				stmt.executeUpdate("ALTER TABLE Games AUTO_INCREMENT = 1;");
 			}
-			comando = "insert into Games (nombre,tiempoJugado) values('"+nick+"','"+tiempoJugado+"');";
+			comando = "insert into Games (nombre,tiempoJugado) values('" + nick + "','" + tiempoJugado + "');";
 			stmt.executeUpdate(comando);
-			System.out.println("Se ha insertado el juego con exito");
-		
+			System.out.println("Se ha insertado el juego con éxito");
+		} catch (SQLSyntaxErrorException e) {
+			System.err.println("Error: No existe la tabla Games");
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				con.close();
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
-	
-	public static void insertarDatosTablaCompra(int idJugador,int idJuego,String cosa,double precio,LocalDate fechaCompra) {
+
+	/**
+	 * Inserta un nuevo registro en la tabla 'Compras'.
+	 * 
+	 * @param idJugador   ID del jugador que realiza la compra.
+	 * @param idJuego     ID del juego comprado.
+	 * @param cosa        Descripción del objeto comprado.
+	 * @param precio      Precio de la compra.
+	 * @param fechaCompra Fecha de la compra representada como LocalDate.
+	 */
+	public static void insertarDatosTablaCompra(int idJugador, int idJuego, String cosa, double precio,
+			LocalDate fechaCompra) {
 		Connection con = null;
 		Statement stmt = null;
 		String comando = "";
@@ -83,17 +135,28 @@ public class Insertar {
 			con = Conexion.conectar();
 			stmt = con.createStatement();
 			contador = contadorEntidades("Compras");
-			if(contador<=0) {
+			if (contador <= 0) {
 				stmt.executeUpdate("ALTER TABLE Compras AUTO_INCREMENT = 1;");
 			}
-			comando = "insert into Compras (idPlayer,idGames,cosa,precio,fechaCompra) values('"+idJugador+"','"+idJuego+"','"+cosa+"','"+precio+"','"+fechaCompra+"');";
+			comando = "insert into Compras (idPlayer,idGames,cosa,precio,fechaCompra) values('" + idJugador + "','"
+					+ idJuego + "','" + cosa + "','" + precio + "','" + fechaCompra + "');";
 			stmt.executeUpdate(comando);
-			System.out.println("Se ha insertado la compra con exito");
-		
+			System.out.println("Se ha insertado la compra con éxito");
 		} catch (SQLIntegrityConstraintViolationException e) {
 			System.out.println("No se ha podido añadir compra, el id del jugador o de la compra no existe");
+		} catch (SQLSyntaxErrorException e) {
+			System.err.println("Error: No existe la tabla Compras");
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				con.close();
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

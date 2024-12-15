@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 
 public class CrearTablas {
+	/**
+	 * Funcion que dependiendo de la cadena pasada, crea la tabla
+	 * @param nombreTabla Cadena que contiene el nombre de la tabla a crear
+	 */
 	public static void crearTablas(String nombreTabla) {
 		Connection con = null;
 		Statement stmt = null;
@@ -25,7 +29,7 @@ public class CrearTablas {
 					stmt.executeUpdate(comando);
 					System.out.println("tabla Player creada con exito");
 				} catch (SQLSyntaxErrorException e) {
-					System.out.println("La tabla ya esta creada");
+					System.err.println("La tabla ya esta creada");
 				}
 				break;
 			case "Games":
@@ -36,10 +40,10 @@ public class CrearTablas {
 							+ "tiempoJugado Time\r\n" 
 							+ ");";
 					stmt.executeUpdate(comando);
-					System.out.println("tabla creada");
+					System.out.println("Tabla Games creada con exito");
 					
 				} catch (SQLSyntaxErrorException e) {
-					System.out.println("La tabla ya esta creada");
+					System.err.println("La tabla ya esta creada");
 				}
 				break;
 			case "Compras":
@@ -55,11 +59,11 @@ public class CrearTablas {
 							+ "constraint fk_idGames_Games FOREIGN KEY (idGames) REFERENCES Games(idGames)"
 							+ ");";
 					stmt.executeUpdate(comando);
-					System.out.println("La tabla ya esta creada");
+					System.out.println("Tabla Compras creada con exito");
 				} catch (SQLSyntaxErrorException e) {
-					System.out.println("La tabla ya esta creada");
+					System.err.println("La tabla ya esta creada");
 				} catch (SQLException e) {
-					System.out.println("Error al crear la tabla Compra: " + e.getMessage());
+					System.err.println("Error al crear la tabla Compra: Se nesesia las tablas Player y Games para su creacion");
 				}
 				break;
 				case "Todas":
@@ -89,14 +93,14 @@ public class CrearTablas {
 								+ "constraint fk_idGames_Games FOREIGN KEY (idGames) REFERENCES Games(idGames)"
 								+ ");";
 						stmt.executeUpdate(comando);
-						System.out.println("Se han creado todas las tablas");
+						System.out.println("Se han creado todas las tablas con exito");
 					} catch (SQLSyntaxErrorException e) {
-						System.out.println("Algunas de las tablas estan creadas, no se puede crear todas a la vez");
+						System.err.println("Algunas de las tablas estan creadas, no se puede crear todas a la vez");
 					}
 					break;
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println("Error: La BD ha producido un error");
 		} finally {
 			
 			try {
