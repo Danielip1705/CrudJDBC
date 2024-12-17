@@ -85,7 +85,7 @@ public class Insertar {
 	 * @throws CommunicationException En caso de problemas de conexión con la base
 	 *                                de datos.
 	 */
-	public static void insertarDatosTablaGames(String nick, Time tiempoJugado) throws CommunicationException {
+	public static void insertarDatosTablaGames(String nick, Time tiempoJugado) {
 		Connection con = null;
 		Statement stmt = null;
 		String comando = "";
@@ -102,7 +102,10 @@ public class Insertar {
 			System.out.println("Se ha insertado el juego con éxito");
 		} catch (SQLSyntaxErrorException e) {
 			System.err.println("Error: No existe la tabla Games");
+			
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getSQLState());
 			System.err.println("Error: La BD ha producido un error");
 		} finally {
 

@@ -151,7 +151,6 @@ public class Modificar {
 				stmtSelectAnt.close();
 				stmtSelectNew.close();
 				res.close();
-				sc.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -264,7 +263,6 @@ public class Modificar {
 				stmtSelectOld.close();
 				stmtSelectNew.close();
 				res.close();
-				sc.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -347,7 +345,6 @@ public class Modificar {
 				conn.close();
 				stmt.close();
 				res.close();
-				sc.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

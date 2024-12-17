@@ -32,7 +32,7 @@ public class Borrar {
 				System.out.println("No se ha podido borrar todas las tablas");
 			}
 		} catch (SQLException e) {
-			System.err.println("Error: Error en la consulta");
+			System.err.println("Error: Error en la BD");
 		}finally {
 			
 			try {
