@@ -7,6 +7,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.Scanner;
 
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+
 public class Borrar {
 
 	static Scanner sc = new Scanner(System.in);
@@ -31,7 +33,11 @@ public class Borrar {
 			} else {
 				System.out.println("No se ha podido borrar todas las tablas");
 			}
+		} catch (CommunicationsException e) {
+			System.err.println("Tiempo de espera finalizado, no se ha podido");
 		} catch (SQLException e) {
+			
+		
 			System.err.println("Error: Error en la BD");
 		}finally {
 			

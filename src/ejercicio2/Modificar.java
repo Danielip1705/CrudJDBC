@@ -147,9 +147,6 @@ public class Modificar {
 			
 			try {
 				conn.close();
-				stmtMod.close();
-				stmtSelectAnt.close();
-				stmtSelectNew.close();
 				res.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -259,9 +256,6 @@ public class Modificar {
 			
 			try {
 				conn.close();
-				stmtMod.close();
-				stmtSelectOld.close();
-				stmtSelectNew.close();
 				res.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
