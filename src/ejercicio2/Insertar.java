@@ -19,14 +19,14 @@ public class Insertar {
 	 * @param tabla Nombre de la tabla de la cual se contarán los registros.
 	 * @return La cantidad de registros en la tabla.
 	 */
-	public static int contadorEntidades(String tabla) {
+	public static int contadorEntidades(String tabla,String id) {
 		Connection conn = null;
 		PreparedStatement query = null;
 		ResultSet res = null;
 		int contador = 0;
 		try {
 			conn = Conexion.conectar();
-			query = conn.prepareStatement("SELECT count(id) FROM " + tabla);
+			query = conn.prepareStatement("SELECT count("+id+") FROM " + tabla);
 			res = query.executeQuery();
 			while (res.next()) {
 				contador = res.getInt(1);
@@ -54,7 +54,7 @@ public class Insertar {
 		try {
 			con = Conexion.conectar();
 			stmt = con.createStatement();
-			contador = contadorEntidades("Player");
+			contador = contadorEntidades("Player","idPlayer");
 			if (contador <= 0) {
 				stmt.executeUpdate("ALTER TABLE Player AUTO_INCREMENT = 1;");
 			}
@@ -93,7 +93,7 @@ public class Insertar {
 		try {
 			con = Conexion.conectar();
 			stmt = con.createStatement();
-			contador = contadorEntidades("Games");
+			contador = contadorEntidades("Games","idGames");
 			if (contador <= 0) {
 				stmt.executeUpdate("ALTER TABLE Games AUTO_INCREMENT = 1;");
 			}
@@ -137,7 +137,7 @@ public class Insertar {
 		try {
 			con = Conexion.conectar();
 			stmt = con.createStatement();
-			contador = contadorEntidades("Compras");
+			contador = contadorEntidades("Compras","idGames");
 			if (contador <= 0) {
 				stmt.executeUpdate("ALTER TABLE Compras AUTO_INCREMENT = 1;");
 			}

@@ -28,11 +28,12 @@ public class Crud {
 	static double precio = 0;
 	static LocalDate fechaCompra;
 
+	static final String OPCION_INVALIDA = "ESTA OPCION NO EXISTE";
+
 	public static void main(String[] args) {
 
 		// Inicializa el programa y muestra el menú hasta que el usuario elija salir.
 		int num = -1;
-		final String OPCION_INVALIDA = "ESTA OPCION NO EXISTE";
 
 		while (num != 0) {
 			num = -1;
@@ -95,21 +96,31 @@ public class Crud {
 					subMenuCompra();
 					num = sc.nextInt();
 					sc.nextLine();
-					num = visualizarCompra(num, OPCION_INVALIDA);
+					visualizarCompra(num);
 					break;
 				// Muestra datos de la tabla Games.
 				case 3:
-					subMenuListadogGame();
+					subMenuListadoGame();
 					num = sc.nextInt();
 					sc.nextLine();
 					visualizacionTablaGames(num);
 					break;
+				case 4:
+					Listado.listarTodos();
+					break;
+				default:
+					System.out.println(OPCION_INVALIDA);
 				}
 				break;
 
 			// Caso 5: Permite modificar registros en las tablas.
 			case 5:
-				subMenuMostrarTablas();
+				System.out.println("==================");
+				System.out.println("¿QUE TABLA QUIERES CREAR?");
+				System.out.println("1. PLAYER");
+				System.out.println("2. COMPRAS");
+				System.out.println("3. GAMES");
+				System.out.println("==================");
 				num = sc.nextInt();
 				sc.nextLine();
 				switch (num) {
@@ -292,12 +303,20 @@ public class Crud {
 						System.out.println(OPCION_INVALIDA);
 					}
 					break;
+
 				default:
 					System.out.println(OPCION_INVALIDA);
 				}
+				break;
+			case 0:
+				System.out.println("SALIENDO DEL PROGRAMA...");
+				break;
+				default:
+					System.out.println(OPCION_INVALIDA);
+					
 			}
 		}
-
+		System.out.println("HAS SALIDO DEL PROGRAMA");
 		// Cierra scanner
 		sc.close();
 	}
@@ -413,7 +432,9 @@ public class Crud {
 		System.out.println("3. POR EMAIL");
 	}
 
-	private static int visualizarCompra(int num, final String OPCION_INVALIDA) {
+	private static void visualizarCompra(int num) {
+		int opc = 0;
+		String filtro = "";
 		switch (num) {
 		// Todos
 		case 1:
@@ -421,60 +442,84 @@ public class Crud {
 			break;
 		// Id compra
 		case 2:
-			boolean superoId = true;
-			int id = 0;
-			int contador = 0;
-			while (superoId) {
 
-				System.out.println("INDICA LA ID");
-				idCompra = sc.nextInt();
-				contador = Listado.contarId("Compras");
-				if (idCompra > contador) {
-					System.out.println("NO EXISTE COMPRA CON ESE ID");
-				} else {
-					superoId = false;
-				}
-			}
+			System.out.println("INDICA LA ID");
+			idCompra = sc.nextInt();
 			sc.nextLine();
-			Listado.listadoCompraPorId(idCompra, "IdCompra");
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. =");
+			System.out.println("2. >");
+			System.out.println("3. <");
+			opc = sc.nextInt();
+			sc.nextLine();
+			switch (opc) {
+			case 1:
+				filtro = "=";
+				break;
+			case 2:
+				filtro = ">";
+				break;
+			case 3:
+				filtro = "<";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
+			Listado.listadoCompraPorId(idCompra, "IdCompra", filtro);
 			break;
 		// Id jugador
 		case 3:
-			superoId = true;
-			id = 0;
-			contador = 0;
-			while (superoId) {
 
-				System.out.println("INDICA LA ID");
-				id = sc.nextInt();
-				contador = Listado.contarId("Player");
-				if (id > contador) {
-					System.out.println("NO EXISTE JUGADOR CON ESE ID");
-				} else {
-					superoId = false;
-				}
-			}
+			System.out.println("INDICA LA ID");
+			idPlayer = sc.nextInt();
 			sc.nextLine();
-			Listado.listadoCompraPorId(id, "idPlayer");
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. =");
+			System.out.println("2. >");
+			System.out.println("3. <");
+			opc = sc.nextInt();
+			sc.nextLine();
+			switch (opc) {
+			case 1:
+				filtro = "=";
+				break;
+			case 2:
+				filtro = ">";
+				break;
+			case 3:
+				filtro = "<";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
+			Listado.listadoCompraPorId(idPlayer, "idPlayer", filtro);
 			break;
 		// IdCompra
 		case 4:
-			superoId = true;
-			id = 0;
-			contador = 0;
-			while (superoId) {
 
-				System.out.println("INDICA LA ID");
-				id = sc.nextInt();
-				contador = Listado.contarId("Games");
-				if (id > contador) {
-					System.out.println("NO EXISTE JUEGO CON ESE ID");
-				} else {
-					superoId = false;
-				}
-			}
+			System.out.println("INDICA LA ID");
+			idGames = sc.nextInt();
 			sc.nextLine();
-			Listado.listadoCompraPorId(id, "idGames");
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. =");
+			System.out.println("2. >");
+			System.out.println("3. <");
+			opc = sc.nextInt();
+			sc.nextLine();
+			switch (opc) {
+			case 1:
+				filtro = "=";
+				break;
+			case 2:
+				filtro = ">";
+				break;
+			case 3:
+				filtro = "<";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
+			Listado.listadoCompraPorId(idGames, "idGames", filtro);
 			break;
 		// Por precio
 		case 5:
@@ -490,23 +535,22 @@ public class Crud {
 			System.out.println("2. POR AÑO Y MES");
 			num = sc.nextInt();
 			sc.nextLine();
-			visuzalizarFecha(num, OPCION_INVALIDA);
+			visuzalizarFecha(num);
 			break;
 		default:
 			System.out.println(OPCION_INVALIDA);
 		}
-		return num;
 	}
 
 	private static void subMenuPrecio() {
 		System.out.println("================================");
-		System.out.println("¿QUE TIPO DE ORDEN QUIERES?");
-		System.out.println("1. MAYOR QUE ESE PRECIO");
-		System.out.println("2. MENOR QUE ESE PRECIO");
+		System.out.println("¿QUE TIPO DE FILTRO QUIERES?");
+		System.out.println("1. >");
+		System.out.println("2. <");
 		System.out.println("================================");
 	}
 
-	private static void visuzalizarFecha(int num, final String OPCION_INVALIDA) {
+	private static void visuzalizarFecha(int num) {
 		switch (num) {
 		case 1:
 			int año = 0;
@@ -540,33 +584,94 @@ public class Crud {
 	}
 
 	private static void visualizacionTablaGames(int num) {
+		String filtro = "";
+		int hora = 0;
+		int opc = -1;
+		int minutos = 0;
 		switch (num) {
 		case 1:
 			Listado.mostrarListadoGames();
 			break;
 		case 2:
-			boolean idSuperado = true;
-			int id = 0;
-			int contador = Listado.contarId("Games");
-			while (idSuperado) {
-
-				System.out.println("Inserte el id");
-				id = sc.nextInt();
-				sc.nextLine();
-				if (id > contador) {
-					System.out.println("No existe un usuario con ese id");
-				} else {
-					idSuperado = false;
-				}
+			System.out.println("Inserte el id");
+			idGames = sc.nextInt();
+			sc.nextLine();
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. =");
+			System.out.println("2. >");
+			System.out.println("3. <");
+			opc = sc.nextInt();
+			sc.nextLine();
+			switch (opc) {
+			case 1:
+				filtro = "=";
+				break;
+			case 2:
+				filtro = ">";
+				break;
+			case 3:
+				filtro = "<";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
 			}
-			Listado.listadoGamesPorId(id);
+			Listado.listadoGamesPorId(idGames, filtro);
 			break;
 		case 3:
 			String nombre = "";
 			System.out.println("INDIQUE EL NOMBRE");
 			nombre = sc.nextLine();
-			Listado.listadoGamesPorNombre(nombre);
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. LIKE");
+			System.out.println("2. =");
+			opc = sc.nextInt();
+			sc.nextLine();
+			switch (opc) {
+			case 1:
+				filtro = "like";
+				break;
+			case 2:
+				filtro = "=";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
+			Listado.listadoGamesPorNombre(nombre, filtro);
 			break;
+		case 4:
+			LocalTime t = null;
+			System.out.println("Inserte la hora");
+			hora = sc.nextInt();
+			sc.nextLine();
+			System.out.println("Inserte los minutos");
+			minutos = sc.nextInt();
+			sc.nextLine();
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. =");
+			System.out.println("2. >");
+			System.out.println("3. <");
+			opc = sc.nextInt();
+			sc.nextLine();
+			switch (opc) {
+			case 1:
+				filtro = "=";
+				break;
+			case 2:
+				filtro = ">";
+				break;
+			case 3:
+				filtro = "<";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
+			t = LocalTime.of(hora, minutos);
+			tiempoJugado = Time.valueOf(t);
+
+			Listado.listadoGamesPorTiempo(tiempoJugado, filtro);
+			break;
+		default:
+			System.out.println(OPCION_INVALIDA);
 
 		}
 	}
@@ -577,44 +682,86 @@ public class Crud {
 			Listado.listadoPlayer();
 			break;
 		case 2:
-			boolean superoId = true;
+			String filtro = "";
 			int id = 0;
-			int contador = 0;
-			while (superoId) {
 
-				System.out.println("INDICA LA ID");
-				id = sc.nextInt();
-				contador = Listado.contarId("Player");
-				if (id > contador) {
-					System.out.println("No existe jugador con ese id");
-				} else {
-					superoId = false;
-				}
-			}
+			System.out.println("INDICA LA ID");
+			id = sc.nextInt();
+
 			sc.nextLine();
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. =");
+			System.out.println("2. >");
+			System.out.println("3. <");
+			num = sc.nextInt();
+			sc.nextLine();
+			switch (num) {
+			case 1:
+				filtro = "=";
+				break;
+			case 2:
+				filtro = ">";
+				break;
+			case 3:
+				filtro = "<";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
 
-			Listado.listadoPlayerPorId(id);
+			Listado.listadoPlayerPorId(id, filtro);
 			break;
 
 		case 3:
-			String nombre = "";
+			filtro = "";
 			System.out.println("INSERTE EL NOMBRE DEL JUGADOR");
-			nombre = sc.nextLine();
-			Listado.listadoPlayerPorNombre(nombre);
+			nick = sc.nextLine();
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. LIKE");
+			System.out.println("2. =");
+			num = sc.nextInt();
+			sc.nextLine();
+			switch (num) {
+			case 1:
+				filtro = "like";
+				break;
+			case 2:
+				filtro = "=";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
+			Listado.listadoPlayerPorNombre(nick, filtro);
 			break;
 		case 4:
-			String email = "";
+			filtro = "";
 			System.out.println("INSERTE EL EMAIL DEL JUGADOR");
 			email = sc.nextLine();
-			Listado.listadoPlayerPorCorreo(email);
+			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+			System.out.println("1. LIKE");
+			System.out.println("2. =");
+			num = sc.nextInt();
+			sc.nextLine();
+			switch (num) {
+			case 1:
+				filtro = "like";
+				break;
+			case 2:
+				filtro = "=";
+				break;
+			default:
+				System.out.println(OPCION_INVALIDA);
+			}
+			Listado.listadoPlayerPorCorreo(email, filtro);
 			break;
 		}
 	}
 
-	private static void subMenuListadogGame() {
+	private static void subMenuListadoGame() {
 		System.out.println("1. TODOS");
 		System.out.println("2. POR ID");
 		System.out.println("3. POR NOMBRE");
+		System.out.println("4. TIEMPO");
 	}
 
 	private static void subMenuListadoJugador() {
@@ -630,6 +777,7 @@ public class Crud {
 		System.out.println("1. PLAYER");
 		System.out.println("2. COMPRAS");
 		System.out.println("3. GAMES");
+		System.out.println("4. TODAS");
 		System.out.println("================");
 	}
 
@@ -675,7 +823,7 @@ public class Crud {
 			nombreTabla = "Todas";
 			CrearTablas.crearTablas(nombreTabla);
 		} else {
-			System.out.println("Elige entre el numero 1,2,3 o 4. No me seas Pelelín");
+			System.out.println(OPCION_INVALIDA);
 		}
 	}
 
@@ -737,6 +885,7 @@ public class Crud {
 		System.out.println("4. LISTAR");
 		System.out.println("5. MODIFICAR");
 		System.out.println("6. BORRAR");
+		System.out.println("0: SALIR");
 		System.out.println("============================");
 	}
 

@@ -5,8 +5,72 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
+import java.sql.Time;
 
 public class Listado {
+	
+	
+	
+	public static void listarTodos() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet res = null;
+		try {
+			conn = Conexion.conectar();
+			stmt = conn.prepareStatement("SELECT * FROM Player;");
+			res = stmt.executeQuery();
+			System.out.println("TABLA PLAYER");
+			System.out.println("=======================================");
+			while (res.next()) {
+				System.out.println("ID: " + res.getInt("idPlayer"));
+				System.out.println("Nick: " + res.getString("nick"));
+				System.out.println("Password: " + res.getString("password"));
+				System.out.println("Email: " + res.getString("email"));
+				System.out.println("=======================================");
+			}
+			System.out.println();
+			conn = Conexion.conectar();
+			stmt = conn.prepareStatement("SELECT * FROM Games");
+			res = stmt.executeQuery();
+			System.out.println("TABLA GAMES");
+			System.out.println("=======================================");
+			while (res.next()) {
+				System.out.println("IdGame: " + res.getInt("idgames"));
+				System.out.println("Nombre: " + res.getString("Nombre"));
+				System.out.println("Tiempo jugado: " + res.getTime("tiempoJugado"));
+				System.out.println("=======================================");
+			}
+			System.out.println();
+			conn = Conexion.conectar();
+			stmt = conn.prepareStatement("SELECT * FROM Compras");
+			res = stmt.executeQuery();
+			System.out.println("TABLA COMPRAS");
+			System.out.println("=======================================");
+			while (res.next()) {
+				System.out.println("ID: " + res.getInt("idCompra"));
+				System.out.println("ID jugador: " + res.getInt("idPlayer"));
+				System.out.println("ID juego: " + res.getInt("idGames"));
+				System.out.println("Cosa: " + res.getString("cosa"));
+				System.out.println("Precio: " + res.getDouble("precio"));
+				System.out.println("Fecha compra: " + res.getDate("fechaCompra"));
+				System.out.println("=======================================");
+
+			}
+		} catch (SQLException e) {
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				stmt.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
 	/**
 	 * Funcion que muestra todos los jugadores de la base de datos
 	 */
@@ -47,13 +111,13 @@ public class Listado {
 	 * 
 	 * @param id Numero entero que indica el id del jugador ha buscar
 	 */
-	public static void listadoPlayerPorId(int id) {
+	public static void listadoPlayerPorId(int id,String filtro) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet lector = null;
 		try {
 			conn = Conexion.conectar();
-			stmt = conn.prepareStatement("SELECT * FROM Player where idPlayer = " + id + ";");
+			stmt = conn.prepareStatement("SELECT * FROM Player where idPlayer "+filtro+" " + id + ";");
 			lector = stmt.executeQuery();
 			System.out.println("=======================================");
 			while (lector.next()) {
@@ -84,13 +148,20 @@ public class Listado {
 	 * 
 	 * @param nombre Cadena que contiene el nombre a buscar en la base de datos
 	 */
-	public static void listadoPlayerPorNombre(String nombre) {
+	public static void listadoPlayerPorNombre(String nombre,String filtro) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		String comando ="";
+		
 		ResultSet lector = null;
 		try {
 			conn = Conexion.conectar();
-			stmt = conn.prepareStatement("SELECT * FROM Player where nick like '" + nombre + "';");
+			if(filtro.equals("like")) {
+				comando = "SELECT * FROM Player where nick "+filtro+" '%" + nombre + "%';";
+			} else {
+				comando = "SELECT * FROM Player where nick "+filtro+" '" + nombre + "';";
+			}
+			stmt = conn.prepareStatement(comando);
 			lector = stmt.executeQuery();
 			System.out.println("=======================================");
 			while (lector.next()) {
@@ -125,13 +196,19 @@ public class Listado {
 	 * 
 	 * @param email Cadena que contiene el correo a buscar
 	 */
-	public static void listadoPlayerPorCorreo(String email) {
+	public static void listadoPlayerPorCorreo(String email,String filtro) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		String comando ="";
 		ResultSet lector = null;
 		try {
 			conn = Conexion.conectar();
-			stmt = conn.prepareStatement("SELECT * FROM Player where email like '%" + email + "%';");
+			if(filtro.equals("like")) {
+				comando = "SELECT * FROM Player where email "+filtro+" '%" + email + "%';";
+			} else {
+				comando = "SELECT * FROM Player where email like '" + email + "';";
+			}
+			stmt = conn.prepareStatement(comando);
 			lector = stmt.executeQuery();
 			System.out.println("=======================================");
 			while (lector.next()) {
@@ -204,13 +281,13 @@ public class Listado {
 	 * 
 	 * @param id Numero entero que indica el id del juego a buscar
 	 */
-	public static void listadoGamesPorId(int id) {
+	public static void listadoGamesPorId(int id,String filtro) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet res = null;
 		try {
 			conn = Conexion.conectar();
-			stmt = conn.prepareStatement("SELECT * FROM Games where idGames = " + id + ";");
+			stmt = conn.prepareStatement("SELECT * FROM Games where idGames "+filtro+" " + id + ";");
 			res = stmt.executeQuery();
 			System.out.println("=======================================");
 			while (res.next()) {
@@ -240,13 +317,19 @@ public class Listado {
 	 * 
 	 * @param nombre Cadena que indica el nombre del juego a buscar
 	 */
-	public static void listadoGamesPorNombre(String nombre) {
+	public static void listadoGamesPorNombre(String nombre,String filtro) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		String comando="";
 		ResultSet res = null;
 		try {
 			conn = Conexion.conectar();
-			stmt = conn.prepareStatement("SELECT * FROM Games where Nombre like '" + nombre + "';");
+			if(filtro.equals("like")) {
+				comando = "SELECT * FROM Games where Nombre "+filtro+" '%" + nombre + "%';";
+			} else {
+				comando = "SELECT * FROM Games where Nombre "+filtro+" '" + nombre + "';";
+			}
+			stmt = conn.prepareStatement(comando);
 			res = stmt.executeQuery();
 			System.out.println("=======================================");
 			while (res.next()) {
@@ -275,6 +358,39 @@ public class Listado {
 
 	}
 
+	public static void listadoGamesPorTiempo(Time tiempo, String filtro) {
+		Connection conn = null;
+		PreparedStatement query = null;
+		String comando="";
+		ResultSet res = null;
+		System.out.println("=======================================");
+		try {
+			conn = Conexion.conectar();
+			comando = "SELECT * FROM Games WHERE tiempoJugado "+filtro+" '"+tiempo+"' ;";
+			query = conn.prepareStatement(comando);
+			res = query.executeQuery();
+			System.out.println("=======================================");
+			while (res.next()) {
+				System.out.println("ID: " + res.getInt("idgames"));
+				System.out.println("Nombre: " + res.getString("Nombre"));
+				System.out.println("Tiempo jugado: " + res.getTime("tiempoJugado"));
+				System.out.println("=======================================");
+
+			}
+		} catch (SQLException e) {
+			System.err.println("Error: La BD ha producido un error");
+		} finally {
+
+			try {
+				conn.close();
+				query.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	/**
 	 * Funcion que muestra cuantos juegos hay en la base de datos
 	 * 
@@ -365,14 +481,14 @@ public class Listado {
 	 * @param atributoId Cadena que muestra que dato de la tabla se realizara el
 	 *                   filtro
 	 */
-	public static void listadoCompraPorId(int id, String atributoId) {
+	public static void listadoCompraPorId(int id, String atributoId,String filtro) {
 		Connection conn = null;
 		PreparedStatement query = null;
 		ResultSet res = null;
 		System.out.println("=======================================");
 		try {
 			conn = Conexion.conectar();
-			query = conn.prepareStatement("SELECT * FROM Compras where " + atributoId + " = " + id + ";");
+			query = conn.prepareStatement("SELECT * FROM Compras where " + atributoId + " "+filtro+" " + id + ";");
 			res = query.executeQuery();
 			System.out.println("=======================================");
 			while (res.next()) {
