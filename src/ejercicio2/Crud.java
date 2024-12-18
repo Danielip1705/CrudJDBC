@@ -446,10 +446,7 @@ public class Crud {
 			System.out.println("INDICA LA ID");
 			idCompra = sc.nextInt();
 			sc.nextLine();
-			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
-			System.out.println("1. =");
-			System.out.println("2. >");
-			System.out.println("3. <");
+			menuFiltrado();
 			opc = sc.nextInt();
 			sc.nextLine();
 			switch (opc) {
@@ -473,10 +470,7 @@ public class Crud {
 			System.out.println("INDICA LA ID");
 			idPlayer = sc.nextInt();
 			sc.nextLine();
-			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
-			System.out.println("1. =");
-			System.out.println("2. >");
-			System.out.println("3. <");
+			menuFiltrado();
 			opc = sc.nextInt();
 			sc.nextLine();
 			switch (opc) {
@@ -500,10 +494,7 @@ public class Crud {
 			System.out.println("INDICA LA ID");
 			idGames = sc.nextInt();
 			sc.nextLine();
-			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
-			System.out.println("1. =");
-			System.out.println("2. >");
-			System.out.println("3. <");
+			menuFiltrado();
 			opc = sc.nextInt();
 			sc.nextLine();
 			switch (opc) {
@@ -540,6 +531,13 @@ public class Crud {
 		default:
 			System.out.println(OPCION_INVALIDA);
 		}
+	}
+
+	private static void menuFiltrado() {
+		System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
+		System.out.println("1. = (IGUAL)");
+		System.out.println("2. > (MAYOR)");
+		System.out.println("3. <(MENOR)");
 	}
 
 	private static void subMenuPrecio() {
@@ -596,10 +594,7 @@ public class Crud {
 			System.out.println("Inserte el id");
 			idGames = sc.nextInt();
 			sc.nextLine();
-			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
-			System.out.println("1. =");
-			System.out.println("2. >");
-			System.out.println("3. <");
+			menuFiltrado();
 			opc = sc.nextInt();
 			sc.nextLine();
 			switch (opc) {
@@ -646,10 +641,7 @@ public class Crud {
 			System.out.println("Inserte los minutos");
 			minutos = sc.nextInt();
 			sc.nextLine();
-			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
-			System.out.println("1. =");
-			System.out.println("2. >");
-			System.out.println("3. <");
+			menuFiltrado();
 			opc = sc.nextInt();
 			sc.nextLine();
 			switch (opc) {
@@ -689,10 +681,7 @@ public class Crud {
 			id = sc.nextInt();
 
 			sc.nextLine();
-			System.out.println("¿COMO QUIERES QUE SEA EL FILTRO?");
-			System.out.println("1. =");
-			System.out.println("2. >");
-			System.out.println("3. <");
+			menuFiltrado();
 			num = sc.nextInt();
 			sc.nextLine();
 			switch (num) {
